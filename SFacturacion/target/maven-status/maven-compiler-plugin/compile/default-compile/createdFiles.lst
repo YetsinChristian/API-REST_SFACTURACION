@@ -1,0 +1,7 @@
+com\mycompany\dao\Articulos.class
+com\mycompany\dao\Clientes.class
+com\mycompany\dao\HibernateUtil.class
+com\mycompany\dao\Categoria.class
+com\mycompany\dao\Vendedor.class
+com\mycompany\dao\FacCabe.class
+com\mycompany\dao\FacDeta.class

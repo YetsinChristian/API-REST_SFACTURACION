@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23/04/2020 11:07:31 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.mycompany.dao.Vendedor" table="vendedor" catalog="dbfacturacion" optimistic-lock="version">
+        <id name="venCod" type="java.lang.Integer">
+            <column name="ven_cod" />
+            <generator class="identity" />
+        </id>
+        <property name="venNom" type="string">
+            <column name="ven_nom" length="35" />
+        </property>
+        <property name="venApe" type="string">
+            <column name="ven_ape" length="35" />
+        </property>
+        <property name="venFnac" type="string">
+            <column name="ven_Fnac" length="35" />
+        </property>
+        <property name="venCel" type="string">
+            <column name="ven_cel" length="35" />
+        </property>
+        <property name="venFing" type="string">
+            <column name="ven_Fing" length="35" />
+        </property>
+        <property name="venLogin" type="string">
+            <column name="ven_login" length="15" />
+        </property>
+        <property name="venClave" type="string">
+            <column name="ven_clave" length="15" />
+        </property>
+        <property name="vista" type="java.lang.Integer">
+            <column name="vista" />
+        </property>
+        <set name="facCabes" table="fac_cabe" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ven_cod" />
+            </key>
+            <one-to-many class="com.mycompany.dao.FacCabe" />
+        </set>
+    </class>
+</hibernate-mapping>

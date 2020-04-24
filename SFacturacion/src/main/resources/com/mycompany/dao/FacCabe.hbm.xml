@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23/04/2020 11:07:31 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.mycompany.dao.FacCabe" table="fac_cabe" catalog="dbfacturacion" optimistic-lock="version">
+        <id name="facNum" type="java.lang.Integer">
+            <column name="fac_num" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="clientes" class="com.mycompany.dao.Clientes" fetch="select">
+            <column name="cli_cod" />
+        </many-to-one>
+        <many-to-one name="vendedor" class="com.mycompany.dao.Vendedor" fetch="select">
+            <column name="ven_cod" />
+        </many-to-one>
+        <property name="facFec" type="string">
+            <column name="fac_fec" length="35" />
+        </property>
+        <property name="facTipo" type="java.lang.Character">
+            <column name="fac_tipo" length="1" />
+        </property>
+        <property name="facEst" type="int">
+            <column name="fac_est" not-null="true" />
+        </property>
+        <property name="facSubt" type="big_decimal">
+            <column name="fac_subt" precision="5" />
+        </property>
+        <property name="facIgv" type="big_decimal">
+            <column name="fac_igv" precision="5" />
+        </property>
+        <property name="facTot" type="big_decimal">
+            <column name="fac_tot" precision="5" />
+        </property>
+        <property name="vista" type="java.lang.Integer">
+            <column name="vista" />
+        </property>
+        <set name="facDetas" table="fac_deta" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="fac_num" not-null="true" />
+            </key>
+            <one-to-many class="com.mycompany.dao.FacDeta" />
+        </set>
+    </class>
+</hibernate-mapping>

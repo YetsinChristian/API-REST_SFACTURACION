@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23/04/2020 11:07:31 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.mycompany.dao.FacDeta" table="fac_deta" catalog="dbfacturacion" optimistic-lock="version">
+        <id name="dfacNum" type="java.lang.Integer">
+            <column name="dfac_num" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="articulos" class="com.mycompany.dao.Articulos" fetch="select">
+            <column name="art_cod" not-null="true" />
+        </many-to-one>
+        <many-to-one name="facCabe" class="com.mycompany.dao.FacCabe" fetch="select">
+            <column name="fac_num" not-null="true" />
+        </many-to-one>
+        <property name="artCan" type="java.lang.Integer">
+            <column name="art_can" />
+        </property>
+        <property name="precioArt" type="big_decimal">
+            <column name="precio_art" precision="5" />
+        </property>
+    </class>
+</hibernate-mapping>

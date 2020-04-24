@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23/04/2020 11:07:31 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.mycompany.dao.Articulos" table="articulos" catalog="dbfacturacion" optimistic-lock="version">
+        <id name="artCod" type="java.lang.Integer">
+            <column name="art_cod" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="categoria" class="com.mycompany.dao.Categoria" fetch="select">
+            <column name="cat_cod" not-null="true" />
+        </many-to-one>
+        <property name="artNom" type="string">
+            <column name="art_nom" length="100" />
+        </property>
+        <property name="artUni" type="string">
+            <column name="art_uni" length="10" />
+        </property>
+        <property name="artPre" type="big_decimal">
+            <column name="art_pre" precision="8" />
+        </property>
+        <property name="artStk" type="java.lang.Integer">
+            <column name="art_stk" />
+        </property>
+        <property name="vista" type="java.lang.Integer">
+            <column name="vista" />
+        </property>
+        <set name="facDetas" table="fac_deta" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="art_cod" not-null="true" />
+            </key>
+            <one-to-many class="com.mycompany.dao.FacDeta" />
+        </set>
+    </class>
+</hibernate-mapping>

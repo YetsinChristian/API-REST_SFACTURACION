@@ -1,0 +1,112 @@
+CREATE DATABASE DBFACTURACION;
+
+USE DBFACTURACION;
+
+CREATE TABLE Categoria (
+	cat_cod int NOT NULL Primary key,
+	cat_des varchar(50) NOT NULL);
+
+CREATE TABLE Articulos (
+	art_cod int NOT NULL Primary key,
+	art_nom varchar (100) NULL ,
+	art_uni varchar (10) NULL ,
+	art_pre decimal(8,2) NULL ,
+	art_stk int NULL,
+	cat_cod int NOT NULL,
+	constraint fk_cat_cod foreign key(cat_cod)
+    references categoria(cat_cod)
+	 );
+
+	
+CREATE TABLE Clientes (
+	cli_cod int NOT NULL Primary Key,
+	cli_nom varchar(50) NULL ,
+	cli_tel varchar(10) null ,
+	cli_cor varchar(35) NULL ,
+	cli_dir varchar(30) NULL,
+  cli_cre decimal(8,2) null );
+
+ create TABLE Vendedor(
+	ven_cod int not null primary key,
+	ven_nom varchar (35) NULL ,
+	ven_ape varchar (35) NULL ,
+	ven_Fnac varchar(35) NULL, 
+	ven_cel varchar (35) NULL ,
+	ven_Fing varchar(35) NULL, 
+	ven_login varchar(15) NULL,
+	ven_clave varchar(15) NULL);
+
+  CREATE TABLE Fac_cabe (
+	fac_num int NOT NULL Primary Key,
+	fac_fec varchar(35) NULL ,
+	cli_cod int NULL ,
+	fac_tipo char (1) NULL check(fac_tipo in('F','B')),
+  ven_cod int NULL,
+	fac_est int NOT NULL,
+	fac_subt decimal(5,2),
+	fac_igv decimal(5,2),
+	fac_tot decimal(5,2),
+	constraint fk_cli_cod foreign key(cli_cod)
+	references clientes(cli_cod),
+	constraint fk_ven_cod foreign key(ven_cod)
+	references vendedor(ven_cod)
+		 );
+     
+select * from fac_deta;
+select * from fac_cabe;
+insert into fac_deta values(0,2,25,20);
+delete from fac_deta where art_cod=1;
+
+CREATE TABLE Fac_deta (
+	fac_num int NOT NULL ,
+	art_cod int NOT NULL  ,
+	art_can  int NULL ,
+ 	precio_art numeric(5,2),
+  Primary Key(Fac_num,art_cod));
+
+alter table fac_deta
+	add constraint fk_fac_num foreign key(fac_num)
+		references fac_cabe(fac_num);
+    
+alter table fac_deta
+	add constraint fk_art_cod foreign key(art_cod)
+		references articulos(art_cod);
+
+INSERT INTO CATEGORIA VALUES (1, 'CARNES');
+INSERT INTO CATEGORIA VALUES (2, 'POLLOS-AVES');
+INSERT INTO CATEGORIA VALUES (3, 'PESCADERIA');
+INSERT INTO CATEGORIA VALUES (4, 'FRUTAS');
+INSERT INTO CATEGORIA VALUES (5, 'VERDURAS');
+INSERT INTO CATEGORIA VALUES (6, 'PANADERIA');
+INSERT INTO CATEGORIA VALUES (7, 'CONFITERIA Y REPOSTERIA');
+INSERT INTO CATEGORIA VALUES (8, 'EMBUTIDOS');
+INSERT INTO CATEGORIA VALUES (9, 'LACTEOS');
+INSERT INTO CATEGORIA VALUES (10, 'GOLOSINAS Y SNAKCS');
+INSERT INTO CATEGORIA VALUES (11, 'BEBIDAS SIN ALCOHOL');
+INSERT INTO CATEGORIA VALUES (12, 'LICORES Y TABACO');
+INSERT INTO CATEGORIA VALUES (13, 'CUIDADO PERSONAL');
+INSERT INTO CATEGORIA VALUES (14, 'LIMPIEZA DEL HOGAR');
+INSERT INTO CATEGORIA VALUES (15, 'MASCOTAS');
+INSERT INTO CATEGORIA VALUES (16, 'FERRETERIA');
+INSERT INTO CATEGORIA VALUES (17, 'JUGUETERIA');
+INSERT INTO CATEGORIA VALUES (18, 'LIBRERIA');
+INSERT INTO CATEGORIA VALUES (19, 'ABARROTES');
+
+INSERT INTO Clientes VALUES (1,'Yetsin Gonzales','99999999','yetsin@gmail.com','Av.Proceres',2999.99);
+INSERT INTO Clientes VALUES (2,'Luis Mescco','99999998','luis@gmail.com','Av.Piramide',3999.99);
+INSERT INTO Clientes VALUES (3,'Ivan Ramos','99999997','ivan@gmail.com','Bayovar',3999.99);
+INSERT INTO Clientes VALUES (4,'Monica Rivera','99999996','monica@gmail.com','Av. Malecon checa',2999.99);
+
+INSERT INTO Vendedor VALUES (1,'Monica Pilar','Rivera Romero','1997/06/05','99999999','2019/06/05','MRivera','123456');
+INSERT INTO Vendedor VALUES (2,'Yetsin','Gonzales Perca','1997/10/16','99999998','2019/06/05','YPerca','123456');
+INSERT INTO Vendedor VALUES (3,'Luis','Mescco','1997/06/15','99999997','2019/05/06','LMesco','123456');
+
+INSERT INTO Articulos VALUES (1,'CORTE PREMIUN RES','KILOS',28.5,200,1);
+INSERT INTO Articulos VALUES (2,'PAVO SAN FERNANDO','KILOS',12.5,300,2);
+INSERT INTO Articulos VALUES (3,'SALMON','KILOS',38.5,100,3);
+INSERT INTO Articulos VALUES (4,'SANDIA DE TEMPORADA','KILOS',1.5,200,4);
+INSERT INTO Articulos VALUES (5,'PAPA AMARILLA','KILOS',2.5,200,5);
+INSERT INTO Articulos VALUES (6,'PAN DE MOLDE INTEGRAL','UNIDAD',6.5,200,6);
+INSERT INTO Articulos VALUES (7,'EMPANADA PREMIUM','UNIDAD',5.5,200,7);
+INSERT INTO Articulos VALUES (8,'CHICHARRON PRENSA PREMIUN','KILOS',10.5,200,8);
+INSERT INTO Articulos VALUES (9,'LECHE ENTERA','LITROS',4.5,200,9);
