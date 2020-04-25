@@ -1,112 +1,155 @@
-CREATE DATABASE DBFACTURACION;
+﻿DROP DATABASE dbfacturacion;
+CREATE DATABASE `dbfacturacion`;
+USE `dbfacturacion`;
 
-USE DBFACTURACION;
+CREATE TABLE `categoria` (
+  `cat_cod` int(11) NOT NULL AUTO_INCREMENT,
+  `cat_des` varchar(50) NOT NULL,
+  `vista` int(11) DEFAULT NULL,
+  PRIMARY KEY (`cat_cod`)
+) ENGINE=InnoDB AUTO_INCREMENT=10001 DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE Categoria (
-	cat_cod int NOT NULL Primary key,
-	cat_des varchar(50) NOT NULL);
+CREATE TABLE `clientes` (
+  `cli_cod` int(11) NOT NULL AUTO_INCREMENT,
+  `cli_nom` varchar(50) DEFAULT NULL,
+  `cli_tel` varchar(10) DEFAULT NULL,
+  `cli_cor` varchar(35) DEFAULT NULL,
+  `cli_dir` varchar(30) DEFAULT NULL,
+  `cli_cre` decimal(8,2) DEFAULT NULL,
+  `vista` int(11) DEFAULT NULL,
+  PRIMARY KEY (`cli_cod`)
+) ENGINE=InnoDB AUTO_INCREMENT=10001 DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE Articulos (
-	art_cod int NOT NULL Primary key,
-	art_nom varchar (100) NULL ,
-	art_uni varchar (10) NULL ,
-	art_pre decimal(8,2) NULL ,
-	art_stk int NULL,
-	cat_cod int NOT NULL,
-	constraint fk_cat_cod foreign key(cat_cod)
-    references categoria(cat_cod)
-	 );
+CREATE TABLE `vendedor` (
+  `ven_cod` int(11) NOT NULL AUTO_INCREMENT,
+  `ven_nom` varchar(35) DEFAULT NULL,
+  `ven_ape` varchar(35) DEFAULT NULL,
+  `ven_Fnac` varchar(35) DEFAULT NULL,
+  `ven_cel` varchar(35) DEFAULT NULL,
+  `ven_Fing` varchar(35) DEFAULT NULL,
+  `ven_login` varchar(15) DEFAULT NULL,
+  `ven_clave` varchar(15) DEFAULT NULL,
+  `vista` int(11) DEFAULT NULL,
+  PRIMARY KEY (`ven_cod`)
+) ENGINE=InnoDB AUTO_INCREMENT=10001 DEFAULT CHARSET=utf8mb4;
 
-	
-CREATE TABLE Clientes (
-	cli_cod int NOT NULL Primary Key,
-	cli_nom varchar(50) NULL ,
-	cli_tel varchar(10) null ,
-	cli_cor varchar(35) NULL ,
-	cli_dir varchar(30) NULL,
-  cli_cre decimal(8,2) null );
 
- create TABLE Vendedor(
-	ven_cod int not null primary key,
-	ven_nom varchar (35) NULL ,
-	ven_ape varchar (35) NULL ,
-	ven_Fnac varchar(35) NULL, 
-	ven_cel varchar (35) NULL ,
-	ven_Fing varchar(35) NULL, 
-	ven_login varchar(15) NULL,
-	ven_clave varchar(15) NULL);
+CREATE TABLE `articulos` (
+  `art_cod` int(11) NOT NULL AUTO_INCREMENT,
+  `art_nom` varchar(100) DEFAULT NULL,
+  `art_uni` varchar(10) DEFAULT NULL,
+  `art_pre` decimal(8,2) DEFAULT NULL,
+  `art_stk` int(11) DEFAULT NULL,
+  `cat_cod` int(11) NOT NULL,
+  `vista` int(11) DEFAULT NULL,
+  PRIMARY KEY (`art_cod`),
+  KEY `fk_cat_cod` (`cat_cod`),
+  CONSTRAINT `fk_cat_cod` FOREIGN KEY (`cat_cod`) REFERENCES `categoria` (`cat_cod`)
+) ENGINE=InnoDB AUTO_INCREMENT=10001 DEFAULT CHARSET=utf8mb4;
 
-  CREATE TABLE Fac_cabe (
-	fac_num int NOT NULL Primary Key,
-	fac_fec varchar(35) NULL ,
-	cli_cod int NULL ,
-	fac_tipo char (1) NULL check(fac_tipo in('F','B')),
-  ven_cod int NULL,
-	fac_est int NOT NULL,
-	fac_subt decimal(5,2),
-	fac_igv decimal(5,2),
-	fac_tot decimal(5,2),
-	constraint fk_cli_cod foreign key(cli_cod)
-	references clientes(cli_cod),
-	constraint fk_ven_cod foreign key(ven_cod)
-	references vendedor(ven_cod)
-		 );
-     
-select * from fac_deta;
-select * from fac_cabe;
-insert into fac_deta values(0,2,25,20);
-delete from fac_deta where art_cod=1;
+CREATE TABLE `fac_cabe` (
+  `fac_num` int(11) NOT NULL AUTO_INCREMENT,
+  `fac_fec` varchar(35) DEFAULT NULL,
+  `cli_cod` int(11) DEFAULT NULL,
+  `fac_tipo` char(1) DEFAULT NULL CHECK (`fac_tipo` in ('F','B')),
+  `ven_cod` int DEFAULT NULL,
+  `fac_est` int(11) NOT NULL,
+  `fac_subt` decimal(5,2) DEFAULT NULL,
+  `fac_igv` decimal(5,2) DEFAULT NULL,
+  `fac_tot` decimal(5,2) DEFAULT NULL,
+  `vista` int(11) DEFAULT NULL,
+  PRIMARY KEY (`fac_num`),
+  KEY `fk_cli_cod` (`cli_cod`),
+  KEY `fk_ven_cod` (`ven_cod`),
+  CONSTRAINT `fk_cli_cod` FOREIGN KEY (`cli_cod`) REFERENCES `clientes` (`cli_cod`),
+  CONSTRAINT `fk_ven_cod` FOREIGN KEY (`ven_cod`) REFERENCES `vendedor` (`ven_cod`)
+) ENGINE=InnoDB AUTO_INCREMENT=10001 DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE Fac_deta (
-	fac_num int NOT NULL ,
-	art_cod int NOT NULL  ,
-	art_can  int NULL ,
- 	precio_art numeric(5,2),
-  Primary Key(Fac_num,art_cod));
+CREATE TABLE `fac_deta` (
+  `dfac_num` int(11) NOT NULL AUTO_INCREMENT,
+  `fac_num` int(11) NOT NULL,
+  `art_cod` int(11) NOT NULL,
+  `art_can` int(11) DEFAULT NULL,
+  `precio_art` decimal(5,2) DEFAULT NULL,
+  PRIMARY KEY (`dfac_num`),
+  KEY `fk_fac_num` (`fac_num`),
+  KEY `fk_art_cod` (`art_cod`),
+  CONSTRAINT `fk_art_cod` FOREIGN KEY (`art_cod`) REFERENCES `articulos` (`art_cod`),
+  CONSTRAINT `fk_fac_num` FOREIGN KEY (`fac_num`) REFERENCES `fac_cabe` (`fac_num`)
+) ENGINE=InnoDB AUTO_INCREMENT=10001 DEFAULT CHARSET=utf8mb4;
 
-alter table fac_deta
-	add constraint fk_fac_num foreign key(fac_num)
-		references fac_cabe(fac_num);
-    
-alter table fac_deta
-	add constraint fk_art_cod foreign key(art_cod)
-		references articulos(art_cod);
+INSERT INTO `categoria` (`cat_cod`, `cat_des`, `vista`) VALUES
+	(null, 'CARNES', 1),
+	(null, 'POLLOS-AVES', 1),
+	(null, 'PESCADERIA', 1),
+	(null, 'FRUTAS', 1),
+	(null, 'VERDURAS', 1),
+	(null, 'PANADERIA', 1),
+	(null, 'CONFITERIA Y REPOSTERIA', 1),
+	(null, 'EMBUTIDOS', 1),
+	(null, 'LACTEOS', 1),
+	(null, 'GOLOSINAS Y SNAKCS', 1),
+	(null, 'BEBIDAS SIN ALCOHOL', 1),
+	(null, 'LICORES Y TABACO', 1),
+	(null, 'CUIDADO PERSONAL', 1),
+	(null, 'LIMPIEZA DEL HOGAR', 1),
+	(null, 'MASCOTAS', 1),
+	(null, 'FERRETERIA', 1),
+	(null, 'JUGUETERIA', 1),
+	(null, 'LIBRERIA', 1),
+	(null, 'ABARROTES', 1),
+	(null, 'PRUEBA', 1);
 
-INSERT INTO CATEGORIA VALUES (1, 'CARNES');
-INSERT INTO CATEGORIA VALUES (2, 'POLLOS-AVES');
-INSERT INTO CATEGORIA VALUES (3, 'PESCADERIA');
-INSERT INTO CATEGORIA VALUES (4, 'FRUTAS');
-INSERT INTO CATEGORIA VALUES (5, 'VERDURAS');
-INSERT INTO CATEGORIA VALUES (6, 'PANADERIA');
-INSERT INTO CATEGORIA VALUES (7, 'CONFITERIA Y REPOSTERIA');
-INSERT INTO CATEGORIA VALUES (8, 'EMBUTIDOS');
-INSERT INTO CATEGORIA VALUES (9, 'LACTEOS');
-INSERT INTO CATEGORIA VALUES (10, 'GOLOSINAS Y SNAKCS');
-INSERT INTO CATEGORIA VALUES (11, 'BEBIDAS SIN ALCOHOL');
-INSERT INTO CATEGORIA VALUES (12, 'LICORES Y TABACO');
-INSERT INTO CATEGORIA VALUES (13, 'CUIDADO PERSONAL');
-INSERT INTO CATEGORIA VALUES (14, 'LIMPIEZA DEL HOGAR');
-INSERT INTO CATEGORIA VALUES (15, 'MASCOTAS');
-INSERT INTO CATEGORIA VALUES (16, 'FERRETERIA');
-INSERT INTO CATEGORIA VALUES (17, 'JUGUETERIA');
-INSERT INTO CATEGORIA VALUES (18, 'LIBRERIA');
-INSERT INTO CATEGORIA VALUES (19, 'ABARROTES');
+INSERT INTO `clientes` (`cli_cod`, `cli_nom`, `cli_tel`, `cli_cor`, `cli_dir`, `cli_cre`, `vista`) VALUES
+	(null, 'CHRISTIAN', '1234567', 'sara@gmail.com', 'sauces', 200.00, NULL),
+	(null, 'Yetsin Gonzales', '99999999', 'yetsin@gmail.com', 'Av.Proceres', 2999.99, 1),
+	(null, 'Luis Mescco', '99999998', 'luis@gmail.com', 'san juan', 3999.99, 1),
+	(null, 'Ivan Ramos', '99999997', 'ivanGerald@gmail.com', 'Bayovar', 3999.99, 1),
+	(null, 'Pilar Rivera', '99999996', 'monica@gmail.com', 'Av. Malecon checa', 2999.99, 1);
 
-INSERT INTO Clientes VALUES (1,'Yetsin Gonzales','99999999','yetsin@gmail.com','Av.Proceres',2999.99);
-INSERT INTO Clientes VALUES (2,'Luis Mescco','99999998','luis@gmail.com','Av.Piramide',3999.99);
-INSERT INTO Clientes VALUES (3,'Ivan Ramos','99999997','ivan@gmail.com','Bayovar',3999.99);
-INSERT INTO Clientes VALUES (4,'Monica Rivera','99999996','monica@gmail.com','Av. Malecon checa',2999.99);
+INSERT INTO `articulos` (`art_cod`, `art_nom`, `art_uni`, `art_pre`, `art_stk`, `cat_cod`, `vista`) VALUES
+	(null, 'CORTE PREMIUN RES', 'KILOS', 28.50, 200, 10001, 1),
+	(null, 'PAVO SAN FERNANDO', 'KILOS', 12.50, 300, 10002, 1),
+	(null, 'SALMON', 'KILOS', 38.50, 100, 10003, 1),
+	(null, 'SANDIA DE TEMPORADA', 'KILOS', 1.50, 200, 10003, 1),
+	(null, 'PAPA AMARILLA', 'KILOS', 2.50, 200, 10004, 1),
+	(null, 'PAN DE MOLDE INTEGRAL', 'UNIDAD', 6.50, 200, 10005, 1),
+	(null, 'EMPANADA PREMIUM', 'UNIDAD', 5.50, 200, 10006, 1),
+	(null, 'CHICHARRON PRENSA PREMIUN', 'KILOS', 10.50, 200, 10007, 1),
+	(null, 'LECHE ENTERA', 'LITROS', 4.50, 200, 10008, 1);
 
-INSERT INTO Vendedor VALUES (1,'Monica Pilar','Rivera Romero','1997/06/05','99999999','2019/06/05','MRivera','123456');
-INSERT INTO Vendedor VALUES (2,'Yetsin','Gonzales Perca','1997/10/16','99999998','2019/06/05','YPerca','123456');
-INSERT INTO Vendedor VALUES (3,'Luis','Mescco','1997/06/15','99999997','2019/05/06','LMesco','123456');
+INSERT INTO `vendedor` (`ven_cod`, `ven_nom`, `ven_ape`, `ven_Fnac`, `ven_cel`, `ven_Fing`, `ven_login`, `ven_clave`, `vista`) VALUES
+	(null, 'Monica Pilar', 'Rivera Romero', '1997/06/05', '99999999', '2019/06/05', 'MRivera', '123456', 1),
+	(null, 'Yetsin', 'Gonzales Perca', '1997/10/16', '99999998', '2019/06/05', 'YPerca', '123456', 1),
+	(null, 'Luis', 'Mescco', '1997/06/15', '99999997', '2019/05/06', 'LMesco', '123456', 1),
+	(null, 'Monica Pilar', 'Rivera Romero', '1997/06/05', '99999999', '2019/06/05', 'MRivera', '123456', 1),
+	(null, 'Yetsin', 'Gonzales Perca', '', '99999998', '16/24/2020', 'YPerca', '123456', 1),
+	(null, 'ANTONY', 'Choque', '1923-03-12', '987654321', '16/24/2020', 'tantony', '1234567', NULL),
+	(null, 'ANTONY', 'TORRES', '1923-03-12', '987654321', '16/24/2020', 'tantony', '1234567', NULL);
 
-INSERT INTO Articulos VALUES (1,'CORTE PREMIUN RES','KILOS',28.5,200,1);
-INSERT INTO Articulos VALUES (2,'PAVO SAN FERNANDO','KILOS',12.5,300,2);
-INSERT INTO Articulos VALUES (3,'SALMON','KILOS',38.5,100,3);
-INSERT INTO Articulos VALUES (4,'SANDIA DE TEMPORADA','KILOS',1.5,200,4);
-INSERT INTO Articulos VALUES (5,'PAPA AMARILLA','KILOS',2.5,200,5);
-INSERT INTO Articulos VALUES (6,'PAN DE MOLDE INTEGRAL','UNIDAD',6.5,200,6);
-INSERT INTO Articulos VALUES (7,'EMPANADA PREMIUM','UNIDAD',5.5,200,7);
-INSERT INTO Articulos VALUES (8,'CHICHARRON PRENSA PREMIUN','KILOS',10.5,200,8);
-INSERT INTO Articulos VALUES (9,'LECHE ENTERA','LITROS',4.5,200,9);
+
+INSERT INTO `fac_cabe` (`fac_num`, `fac_fec`, `cli_cod`, `fac_tipo`, `ven_cod`, `fac_est`, `fac_subt`, `fac_igv`, `fac_tot`, `vista`) VALUES
+	(null, '2020-04-17', 10001, 'F', 10001, 0, 27.88, 6.12, 34.00, NULL),
+	(null, '2020-04-17', 10001, 'F', 10001, 0, 27.88, 6.12, 34.00, NULL),
+	(null, '2020-04-17', 10001, 'F', 10001, 0, 40.59, 8.91, 49.50, NULL),
+	(null, '2020-04-17', 10001, 'F', 10001, 0, 10.25, 2.25, 12.50, NULL),
+	(null, '2020-04-18', 10001, 'F', 10001, 0, 15.58, 3.42, 19.00, NULL),
+	(null, '2020-04-18', 10001, 'F', 10001, 0, 86.92, 19.08, 106.00, NULL);
+
+
+INSERT INTO `fac_deta` (`dfac_num`, `fac_num`, `art_cod`, `art_can`, `precio_art`) VALUES
+	(null, 10001, 10001, 1, 28.50),
+	(null, 10001, 10002, 1, 28.50),
+	(null, 10001, 10003, 1, 5.50),
+	(null, 10001, 10004, 1, 5.50),
+	(null, 10002, 10005, 1, 38.50),
+	(null, 10002, 10006, 1, 6.50),
+	(null, 10002, 10007, 1, 4.50),
+	(null, 10002, 10008, 1, 12.50),
+	(null, 10002, 10001, 1, 12.50),
+	(null, 10003, 10002, 1, 6.50),
+	(null, 10003, 10003, 2, 12.50),
+	(null, 10003, 10004, 1, 6.50),
+	(null, 10003, 10005, 1, 4.50),
+	(null, 10004, 10006, 1, 38.50),
+	(null, 10004, 10007, 3, 10.50);
