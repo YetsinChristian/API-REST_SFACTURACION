@@ -10,6 +10,7 @@ import com.mycompany.dao.HibernateUtil;
 import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 
 /**
  *
@@ -20,7 +21,7 @@ public class MCategoria {
     public List<Categoria> get(){
         SessionFactory sf = HibernateUtil.getSessionFactory();
         Session ses = sf.openSession();
-        List<Categoria> datos = ses.createCriteria(Categoria.class).list();
+        List<Categoria> datos = ses.createCriteria(Categoria.class).add(Restrictions.like("vista", 1)).list();                                
         return datos;
     }
     //Obtener una categoria por id
@@ -42,7 +43,9 @@ public class MCategoria {
     public void deleteCategoria(Categoria obj){
         SessionFactory sf = HibernateUtil.getSessionFactory();
         Session ses = sf.openSession();
-        ses.delete(obj);
+        Categoria dao = (Categoria)ses.get(Categoria.class, obj.getCatCod());        
+        dao.setVista(0);
+        ses.update(dao);
         ses.beginTransaction().commit();
         ses.close();
     }
